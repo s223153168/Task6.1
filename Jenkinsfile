@@ -18,18 +18,14 @@ pipeline {
             }
             post {
                 success {
-                    emailext body: "Unit and Integration Tests completed successfully. Logs are attached.",
+                    emailext body: "Unit and Integration Tests completed successfully.",
                     to: 'pateldhruvi1279@gmail.com',
-                    subject: "Unit and Integration Tests Passed",
-                    //attachmentsPattern: 'test.log',
-                    //attachLog: true
+                    subject: "Unit and Integration Tests Passed"
                 }
                 failure {
-                    emailext body: "Unit and Integration Tests failed. Logs are attached.",
-                    to: 'pateldhruvi1279@gmail.comcom',
-                    subject: "Unit and Integration Tests Failed",
-                    //attachmentsPattern: 'test.log',
-                    //attachLog: true
+                    emailext body: "Unit and Integration Tests failed.",
+                    to: 'pateldhruvi1279@gmail.com',
+                    subject: "Unit and Integration Tests Failed"
                 }
             }
         }
@@ -48,18 +44,14 @@ pipeline {
             }
             post {
                 success {
-                    emailext body: "Security Scan completed successfully. Logs are attached.",
+                    emailext body: "Security Scan completed successfully.",
                     to: 'pateldhruvi1279@gmail.com',
-                    subject: "Security Scan Passed",
-                    //attachmentsPattern: 'test.log',
-                    //attachLog: true
+                    subject: "Security Scan Passed"
                 }
                 failure {
                     emailext body: "Security Scan encountered issues.",
                     to: 'pateldhruvi1279@gmail.com',
-                    subject: "Security Scan Failed",
-                    //attachmentsPattern: 'test.log',
-                    //attachLog: true
+                    subject: "Security Scan Failed"
                 }
             }
         }
