@@ -1,80 +1,113 @@
 pipeline {
     agent any
-
+    environment {
+        SOURCE_DIR = "${env.DIRECTORY_PATH ?: 'default/source/path'}"
+    }
     stages {
+        stage('Checkout') {
+            steps {
+                echo "Checking out source code from the repository..."
+                // You can add actual checkout steps here if needed, e.g., git checkout
+            }
+        }
         stage('Build') {
             steps {
-                echo "Retrieving source code from ${env.DIRECTORY_PATH}"
-                echo "Compiling the source code and creating necessary artifacts"
-                echo "Utilizing Maven for build automation"
+                echo "Building project from source directory: ${SOURCE_DIR}"
+                echo "Executing Maven build..."
+                // Actual Maven build command can go here
             }
         }
-
-        stage('Unit and Integration Tests') {
-            steps {
-                echo "Executing unit tests"
-                echo "Running integration tests"
-                echo "Tools: JUnit for unit testing and Postman for integration testing"
+        stage('Testing') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        echo "Running Unit Tests using JUnit..."
+                        // Insert actual JUnit test steps here
+                    }
+                }
+                stage('Integration Tests') {
+                    steps {
+                        echo "Running Integration Tests using Postman..."
+                        // Insert actual Postman test steps here
+                    }
+                }
             }
             post {
+                always {
+                    echo "Tests completed."
+                }
                 success {
-                    emailext body: "Unit and Integration Tests completed successfully.",
-                    to: 'pateldhruvi1279@gmail.com',
-                    subject: "Unit and Integration Tests Passed"
+                    emailext(
+                        subject: "Tests Passed: ${currentBuild.fullDisplayName}",
+                        body: "The unit and integration tests have passed successfully.",
+                        to: "pateldhruvi1279@gmail.com",
+                        attachLog: true
+                    )
                 }
                 failure {
-                    emailext body: "Unit and Integration Tests failed.",
-                    to: 'pateldhruvi1279@gmail.com',
-                    subject: "Unit and Integration Tests Failed"
+                    emailext(
+                        subject: "Tests Failed: ${currentBuild.fullDisplayName}",
+                        body: "The unit and/or integration tests have failed. Please check the attached logs.",
+                        to: "pateldhruvi1279@gmail.com",
+                        attachLog: true
+                    )
                 }
             }
         }
-
         stage('Code Quality Analysis') {
             steps {
-                echo "Analyzing code quality"
-                echo "Using SonarQube Scanner plugin"
+                echo "Performing code quality analysis using SonarQube..."
+                // Insert SonarQube analysis steps here
             }
         }
-
-        stage('Security Vulnerability Scan') {
+        stage('Security Scanning') {
             steps {
-                echo "Conducting security scan for vulnerabilities"
-                echo "Using OWASP Dependency-Check plugin"
+                echo "Conducting security scans using OWASP Dependency-Check..."
+                // Insert security scan steps here
             }
             post {
                 success {
-                    emailext body: "Security Scan completed successfully.",
-                    to: 'pateldhruvi1279@gmail.com',
-                    subject: "Security Scan Passed"
+                    emailext(
+                        subject: "Security Scan Successful: ${currentBuild.fullDisplayName}",
+                        body: "Security scan completed successfully. Please find the logs attached.",
+                        to: "pateldhruvi1279@gmail.com",
+                        attachLog: true
+                    )
                 }
                 failure {
-                    emailext body: "Security Scan encountered issues.",
-                    to: 'pateldhruvi1279@gmail.com',
-                    subject: "Security Scan Failed"
+                    emailext(
+                        subject: "Security Scan Failed: ${currentBuild.fullDisplayName}",
+                        body: "Security scan encountered issues. Review the logs for details.",
+                        to: "pateldhruvi1279@gmail.com",
+                        attachLog: true
+                    )
                 }
             }
         }
-
-        stage('Deploy to Staging Environment') {
+        stage('Deploy to Staging') {
             steps {
-                echo "Deploying the application to the staging environment"
-                echo "Deploying using AWS"
+                echo "Deploying the application to the staging environment..."
+                echo "Using AWS for deployment..."
+                // Insert AWS deployment steps here
             }
         }
-
-        stage('Integration Testing on Staging') {
+        stage('Staging Integration Tests') {
             steps {
-                echo "Running integration tests on the staging environment"
-                echo "Utilizing JUnit for testing"
+                echo "Executing integration tests on the staging environment..."
+                // Insert staging integration test steps here
             }
         }
-
-        stage('Production Deployment') {
+        stage('Deploy to Production') {
             steps {
-                echo "Deploying the application to the production environment"
-                echo "Deploying using AWS"
+                echo "Deploying the application to production..."
+                echo "Final deployment using AWS..."
+                // Insert final production deployment steps here
             }
+        }
+    }
+    post {
+        always {
+            echo "Pipeline execution completed."
         }
     }
 }
