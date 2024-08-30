@@ -103,11 +103,14 @@ pipeline {
                 echo "Final deployment using AWS..."
                 // Insert final production deployment steps here
             }
-        }
-    }
-    post {
-        always {
-            echo "Pipeline execution completed."
+            post {
+                always {
+                    echo "Pipeline execution completed."
+                    mail to: 'pateldhruvi1279@gmail.com',
+                    subject: 'hi',
+                    body: 'success'
+                }
+            }
         }
     }
 }
